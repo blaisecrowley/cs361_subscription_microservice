@@ -21,12 +21,14 @@ def create_or_update_subscription():
 
     user_id = data.get("user_id")
     plan = data.get("plan")
+    renew_at = data.get("renew_at")
 
-    if not user_id or not plan:
-        return jsonify({"error": "user_id and plan are required"}), 400
+    if not user_id or not plan or not renew_at:
+        return jsonify({"error": "user_id, plan, and renew_at are required"}), 400
 
     subscriptions[user_id] = {
-        "plan": plan
+        "plan": plan,
+        "renew_at": renew_at
     }
 
     print("Received subscription request:", data)
