@@ -4,14 +4,14 @@ app = Flask(__name__)
 
 subscriptions = {}
 
-@app.route("/subscription/<username>", methods=["GET"])
-def get_subscription(username):
-    if username not in subscriptions:
+@app.route("/subscription/<user_id>", methods=["GET"])
+def get_subscription(user_id):
+    if user_id not in subscriptions:
         return jsonify({"error": "Subscription not found"}), 404
 
     return jsonify({
-        "username": username,
-        "subscription": subscriptions[username]
+        "user_id": user_id,
+        "subscription": subscriptions[user_id]
     }), 200
 
 
@@ -19,22 +19,24 @@ def get_subscription(username):
 def create_or_update_subscription():
     data = request.get_json()
 
-    username = data.get("username")
+    user_id = data.get("user_id")
     plan = data.get("plan")
 
-    if not username or not plan:
-        return jsonify({"error": "username and plan are required"}), 400
+    if not user_id or not plan:
+        return jsonify({"error": "user_id and plan are required"}), 400
 
-    subscriptions[username] = {
+    subscriptions[user_id] = {
         "plan": plan
     }
 
+    print("Received subscription request:", data)
+
     return jsonify({
         "message": "Subscription saved successfully",
-        "username": username,
-        "subscription": subscriptions[username]
+        "user_id": user_id,
+        "subscription": subscriptions[user_id]
     }), 200
 
 
 if __name__ == "__main__":
-    app.run(port=5003, debug=True)
+    app.run(port=8009, debug=True)
